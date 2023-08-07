@@ -37,10 +37,12 @@
   padding: 8px;
   border: 1px solid #bbb;
   cursor: pointer;
+  transition: 0.1s ease-out;
 }
 
 .cell:hover {
   background-color: #FF5733;
+  transition: ease-in;
 }
 
 @media only screen and (max-width: 768px) {

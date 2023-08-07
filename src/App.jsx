@@ -1,8 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import './App.css'
 
 function App() {
+
+  const [visibility, setVisibility] = useState(
+    Array(9).fill().map(() => Array(9).fill(false))
+  );
+
+  const handleClick = (rowIndex, cellIndex) => {
+    const updatedVisibility = [...visibility];
+    updatedVisibility[rowIndex][cellIndex] = true;
+    setVisibility(updatedVisibility);
+
+    console.log(grid[rowIndex][cellIndex]);
+  };
 
 
     // Generate random numbers
@@ -25,8 +37,16 @@ function App() {
     return grid
   }
 
+  useEffect(() => {
+    generateGrid()
+  
+    
+  }, [])
+  
+
 
   const [grid, setGrid] = useState(generateGrid())
+  // const grid = generateGrid()
 
  
 
@@ -52,7 +72,10 @@ function App() {
             {grid.map((row, rowIndex) => (
               <div key={rowIndex} className='row'>
                 {row.map((cell, cellIndex) => (
-                  <span key={cellIndex} className='cell'>{cell[0]} </span>
+                  <span key={cellIndex} className='cell' onClick={() => handleClick(rowIndex, cellIndex)}>
+                    {visibility[rowIndex][cellIndex] ? cell[0] : ' '}
+                    {/* {cell[0]} */}
+                  </span>
                 ))}
               </div>
             ))}
