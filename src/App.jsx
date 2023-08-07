@@ -1,33 +1,71 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+
+    // Generate random numbers
+   const getRandomNumber = (maxNum) => {
+    return Math.floor(Math.random() * maxNum)
+  }
+
+   // Generate 9x9 Grid
+  const generateGrid = () => {
+    const grid = []
+
+    for (let i = 0; i < 9; i++) {
+      const row = []
+      for (let j = 0; j < 9; j++) {
+        const number = [getRandomNumber(9) + 1, getRandomNumber(2)]
+        row.push(number)
+      }
+      grid.push(row)
+    }
+    return grid
+  }
+
+
+  const [grid, setGrid] = useState(generateGrid())
+
+ 
+
+  // grid.forEach(row => console.log(row.join('   ')))
+
+  grid.forEach(row => console.log(row.map(cell => cell[0]).join('   ')));
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="container">
+
+        <h1 className='heading'>Matimato</h1>
+
+        <div className="section">
+
+          <div className="aside">
+            <h3 className="player">Player A</h3>
+            <h4 className="score">Total score: 8</h4>
+          </div>
+
+          <div className="game">
+            {grid.map((row, rowIndex) => (
+              <div key={rowIndex} className='row'>
+                {row.map((cell, cellIndex) => (
+                  <span key={cellIndex} className='cell'>{cell[0]} </span>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className="aside">
+            <h3 className="player">Player B</h3>
+            <h4 className="score">Total score: 5</h4>
+          </div>
+
+        </div>
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
