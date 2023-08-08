@@ -41,8 +41,16 @@
 }
 
 .cell:hover {
-  background-color: #FF5733;
+  background-color: #008080;
   transition: ease-in;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
 }
 
 @media only screen and (max-width: 768px) {

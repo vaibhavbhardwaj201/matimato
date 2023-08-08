@@ -8,13 +8,17 @@ function App() {
     Array(9).fill().map(() => Array(9).fill(false))
   );
 
-  const handleClick = (rowIndex, cellIndex) => {
+  const cellClick = (rowIndex, cellIndex) => {
     const updatedVisibility = [...visibility];
     updatedVisibility[rowIndex][cellIndex] = true;
     setVisibility(updatedVisibility);
 
     console.log(grid[rowIndex][cellIndex]);
   };
+
+  const getCellBackgroundColor = (cellValue) => {
+    return cellValue[1] === 0 ? 'red' : 'green'
+  }
 
 
     // Generate random numbers
@@ -38,9 +42,7 @@ function App() {
   }
 
   useEffect(() => {
-    generateGrid()
-  
-    
+    setGrid(generateGrid())
   }, [])
   
 
@@ -72,7 +74,9 @@ function App() {
             {grid.map((row, rowIndex) => (
               <div key={rowIndex} className='row'>
                 {row.map((cell, cellIndex) => (
-                  <span key={cellIndex} className='cell' onClick={() => handleClick(rowIndex, cellIndex)}>
+                  <span key={cellIndex} 
+                    className={`cell ${visibility[rowIndex][cellIndex] ? getCellBackgroundColor(cell) : ''}`} 
+                    onClick={() => cellClick(rowIndex, cellIndex)}>
                     {visibility[rowIndex][cellIndex] ? cell[0] : ' '}
                     {/* {cell[0]} */}
                   </span>
