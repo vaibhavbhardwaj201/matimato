@@ -8,12 +8,14 @@ function App() {
     Array(9).fill().map(() => Array(9).fill(false))
   );
 
+  const [firstMove, setFirstMove] = useState(0)
+  const [column, setColumn] = useState(true)
+
   const cellClick = (rowIndex, cellIndex) => {
     const updatedVisibility = [...visibility];
     updatedVisibility[rowIndex][cellIndex] = true;
     setVisibility(updatedVisibility);
 
-    console.log(grid[rowIndex][cellIndex]);
   };
 
   const getCellBackgroundColor = (cellValue) => {
@@ -43,18 +45,53 @@ function App() {
 
   useEffect(() => {
     setGrid(generateGrid())
+    setFirstMove(getRandomNumber(2))
   }, [])
+
+  const chooseRandomCellFromCol = (rowIndex, cellIndex) => {
+  let row;
+  do {
+    row = getRandomNumber(9);
+  } while (visibility[row][cellIndex]);
+
+  return row;
+};
+
+  const chooseRandomCellFromRow = (rowIndex, cellIndex) => {
+  let col;
+  do {
+    col = getRandomNumber(9);
+  } while (visibility[rowIndex][col]);
+
+  return col;
+};
+
+  const highlightMoves = (rowIndex, cellIndex, column) => {
+
+  }
+
+  const computerTurn = (rowIndex, cellIndex, column) => {
+    const cell = column ? grid[chooseRandomCellFromCol(rowIndex, cellIndex)][cellIndex] : grid[rowIndex][chooseRandomCellFromRow(rowIndex, cellIndex)]
+    console.log(cell);
+    return cell
+  }
+
+  const gameStart = () => {
+
+  }
+
   
-
-
+  
+  
   const [grid, setGrid] = useState(generateGrid())
   // const grid = generateGrid()
-
+  
+  computerTurn(4, 1, column)
  
 
   // grid.forEach(row => console.log(row.join('   ')))
 
-  grid.forEach(row => console.log(row.map(cell => cell[0]).join('   ')));
+  // grid.forEach(row => console.log(row.map(cell => cell[0]).join('   ')));
 
 
   return (
@@ -66,7 +103,9 @@ function App() {
         <div className="section">
 
           <div className="aside">
-            <h3 className="player">Player A</h3>
+            <div className="player">
+              <h3 className="player">Player A</h3>
+            </div>
             <h4 className="score">Total score: 8</h4>
           </div>
 
@@ -77,8 +116,7 @@ function App() {
                   <span key={cellIndex} 
                     className={`cell ${visibility[rowIndex][cellIndex] ? getCellBackgroundColor(cell) : ''}`} 
                     onClick={() => cellClick(rowIndex, cellIndex)}>
-                    {visibility[rowIndex][cellIndex] ? cell[0] : ' '}
-                    {/* {cell[0]} */}
+                    {visibility[rowIndex][cellIndex] ? ' ' : cell[0]}
                   </span>
                 ))}
               </div>
@@ -86,7 +124,9 @@ function App() {
           </div>
 
           <div className="aside">
-            <h3 className="player">Player B</h3>
+            <div className="player">
+              <h3 className="player">Player B</h3>
+            </div>
             <h4 className="score">Total score: 5</h4>
           </div>
 
