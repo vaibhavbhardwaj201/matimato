@@ -8,15 +8,41 @@ function App() {
     Array(9).fill().map(() => Array(9).fill(false))
   );
 
+  // generate random number 0 for player A (person), 1 for computer or player B
   const [firstMove, setFirstMove] = useState(0)
   const [column, setColumn] = useState(true)
+  const [playerAScore, setPlayerAScore] = useState(0)
+  const [playerBScore, setPlayerBScore] = useState(0)
+  const [currnetPlayer, setCurrentPlayer] = useState('A')
+  const [gameEnd, setGameEnd] = useState(false)
 
   const cellClick = (rowIndex, cellIndex) => {
+
+    if (currnetPlayer === 'A') {
+      if (grid[rowIndex][cellIndex][1] === 0) {
+        setPlayerAScore(prev => prev - grid[rowIndex][cellIndex][0])
+      } else {
+        setPlayerAScore(prev => prev + grid[rowIndex][cellIndex][0])
+      }
+    }
+    if (currnetPlayer === 'B') {
+      if (grid[rowIndex][cellIndex][1] === 0) {
+        setPlayerBScore(prev => prev - grid[rowIndex][cellIndex][0])
+      } else {
+        setPlayerBScore(prev => prev + grid[rowIndex][cellIndex][0])
+      }
+    }
     const updatedVisibility = [...visibility];
     updatedVisibility[rowIndex][cellIndex] = true;
     setVisibility(updatedVisibility);
 
+    changeMove()
   };
+
+  const changeMove = () => {
+    const change = currnetPlayer === 'A' ? 'B' : 'A'
+    return setCurrentPlayer(change)
+  }
 
   const getCellBackgroundColor = (cellValue) => {
     return cellValue[1] === 0 ? 'red' : 'green'
@@ -72,12 +98,15 @@ function App() {
 
   const computerTurn = (rowIndex, cellIndex, column) => {
     const cell = column ? grid[chooseRandomCellFromCol(rowIndex, cellIndex)][cellIndex] : grid[rowIndex][chooseRandomCellFromRow(rowIndex, cellIndex)]
-    console.log(cell);
     return cell
   }
 
   const gameStart = () => {
-
+    if (firstMove === 0) {
+      setCurrentPlayer('A')
+    } else {
+      setCurrentPlayer('B')
+    }
   }
 
   
@@ -105,8 +134,9 @@ function App() {
           <div className="aside">
             <div className="player">
               <h3 className="player">Player A</h3>
+              {currnetPlayer === 'A' && <h4>Your turn</h4>}
             </div>
-            <h4 className="score">Total score: 8</h4>
+            <h4 className="score">Total score: {playerAScore}</h4>
           </div>
 
           <div className="game">
@@ -127,7 +157,7 @@ function App() {
             <div className="player">
               <h3 className="player">Player B</h3>
             </div>
-            <h4 className="score">Total score: 5</h4>
+            <h4 className="score">Total score: {playerBScore}</h4>
           </div>
 
         </div>
