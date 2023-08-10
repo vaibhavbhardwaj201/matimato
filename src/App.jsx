@@ -93,7 +93,8 @@ function App() {
 };
 
   const highlightMoves = (rowIndex, cellIndex, column) => {
-
+    const cell = column ? grid[chooseRandomCellFromCol(rowIndex, cellIndex)][cellIndex] : grid[rowIndex][chooseRandomCellFromRow(rowIndex, cellIndex)]
+    return cell
   }
 
   const computerTurn = (rowIndex, cellIndex, column) => {
