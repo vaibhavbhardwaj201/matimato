@@ -8,6 +8,10 @@ function App() {
     Array(9).fill().map(() => Array(9).fill(false))
   );
 
+  const [highlighted, setHighlighted] = useState(
+    Array(9).fill().map(() => Array(9).fill(false))
+  );
+
   // generate random number 0 for player A (person), 1 for computer or player B
   const [firstMove, setFirstMove] = useState(0)
   const [column, setColumn] = useState(true)
@@ -19,6 +23,7 @@ function App() {
   const cellClick = (rowIndex, cellIndex) => {
 
     if (currnetPlayer === 'A') {
+      // Check color for score | green to add, red to substract
       if (grid[rowIndex][cellIndex][1] === 0) {
         setPlayerAScore(prev => prev - grid[rowIndex][cellIndex][0])
       } else {
@@ -26,22 +31,26 @@ function App() {
       }
     }
     if (currnetPlayer === 'B') {
+      // Check color for score | green to add, red to substract
       if (grid[rowIndex][cellIndex][1] === 0) {
         setPlayerBScore(prev => prev - grid[rowIndex][cellIndex][0])
       } else {
         setPlayerBScore(prev => prev + grid[rowIndex][cellIndex][0])
       }
+      // computerTurn()
     }
     const updatedVisibility = [...visibility];
     updatedVisibility[rowIndex][cellIndex] = true;
     setVisibility(updatedVisibility);
 
+    highlightMoves(rowIndex, cellIndex, column)
     changeMove()
   };
 
   const changeMove = () => {
     const change = currnetPlayer === 'A' ? 'B' : 'A'
-    return setCurrentPlayer(change)
+    setCurrentPlayer(change)
+    setColumn(!column)
   }
 
   const getCellBackgroundColor = (cellValue) => {
@@ -92,10 +101,22 @@ function App() {
   return col;
 };
 
-  const highlightMoves = (rowIndex, cellIndex, column) => {
-    const cell = column ? grid[chooseRandomCellFromCol(rowIndex, cellIndex)][cellIndex] : grid[rowIndex][chooseRandomCellFromRow(rowIndex, cellIndex)]
-    return cell
-  }
+  const highlightMoves = (rowIndex, cellIndex, isColumn) => {
+    const updatedHighlighted = Array(9).fill().map(() => Array(9).fill(false));
+
+    if (isColumn) {
+      for (let row = 0; row < 9; row++) {
+        updatedHighlighted[row][cellIndex] = true;
+      }
+    } else {
+      for (let col = 0; col < 9; col++) {
+        updatedHighlighted[rowIndex][col] = true;
+      }
+      // updatedHighlighted[rowIndex] = Array(9).fill(true);
+    }
+
+    setHighlighted(updatedHighlighted);
+  };
 
   const computerTurn = (rowIndex, cellIndex, column) => {
     const cell = column ? grid[chooseRandomCellFromCol(rowIndex, cellIndex)][cellIndex] : grid[rowIndex][chooseRandomCellFromRow(rowIndex, cellIndex)]
@@ -114,14 +135,6 @@ function App() {
   
   
   const [grid, setGrid] = useState(generateGrid())
-  // const grid = generateGrid()
-  
-  computerTurn(4, 1, column)
- 
-
-  // grid.forEach(row => console.log(row.join('   ')))
-
-  // grid.forEach(row => console.log(row.map(cell => cell[0]).join('   ')));
 
 
   return (
@@ -142,10 +155,10 @@ function App() {
 
           <div className="game">
             {grid.map((row, rowIndex) => (
-              <div key={rowIndex} className='row'>
+              <div key={rowIndex} className={`row `}>
                 {row.map((cell, cellIndex) => (
                   <span key={cellIndex} 
-                    className={`cell ${visibility[rowIndex][cellIndex] ? getCellBackgroundColor(cell) : ''}`} 
+                    className={`cell ${highlighted[rowIndex][cellIndex] ? 'highlighted' : ''} ${visibility[rowIndex][cellIndex] ? getCellBackgroundColor(cell) : ''}`} 
                     onClick={() => cellClick(rowIndex, cellIndex)}>
                     {visibility[rowIndex][cellIndex] ? ' ' : cell[0]}
                   </span>
