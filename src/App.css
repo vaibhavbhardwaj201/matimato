@@ -29,13 +29,16 @@
   justify-content: space-around;
   align-items: center;
   width: 100%;
+  gap: 4px;
 }
 
 .cell {
+  margin: 2px 0;
   width: 24px;
   height: 24px;
   padding: 8px;
   border: 1px solid #bbb;
+  border-radius: 4px;
   cursor: pointer;
   transition: 0.1s ease-out;
 }
